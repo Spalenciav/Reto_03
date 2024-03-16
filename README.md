@@ -125,6 +125,27 @@ rectangle = Rectangle(top_line, right_line, bottom_line, left_line)
 Restaurant scenario: You want to design a program to calculate the bill for a customer's order in a restaurant.
 # Solución:
 
+```mermaid
+
+classDiagram
+    Menu_Items <|-- Entrada
+    Menu_Items <|-- Plato_Principal
+    Menu_Items <|-- Bebida
+    Menu_Items : +Nombre
+    Menu_Items : +Precio
+    Menu_Items : +Impuesto
+    Menu_Items : +calcularPrecio()
+    Entrada : +Tipo
+    Bebida: +Tipo
+    Plato_Principal: +Tipo
+
+    Orden: +Items
+    Orden: +add_item()
+    Orden: +calculate_total()
+    Orden *-- Menu_Items
+    Orden : +DarFactura()
+```
+
 ```python
 class MenuItem:
     def __init__(self, name, price):
@@ -162,9 +183,27 @@ class Order:
 
     def calculate_total(self):
         total = 0
+        beverage_count = 0
+        appetizer_count = 0
+        main_course_count = 0
+
         for item, quantity in self.items:
+            if isinstance(item, Beverage):
+                beverage_count += 1
+            elif isinstance(item, Appetizer):
+                appetizer_count += 1
+            elif isinstance(item, MainCourse):
+                main_course_count += 1
+
             total += item.calculate_total(quantity)
+
+        # Aplicar descuento si se pide al menos una bebida, una entrada y un plato principal
+        if beverage_count >= 1 and appetizer_count >= 1 and main_course_count >= 1:
+            discount = total * 0.1  
+            total -= discount
+
         return total
+
 
 if __name__ == "__main__":
     menu_items = [
@@ -179,12 +218,13 @@ if __name__ == "__main__":
         MainCourse("Salmón a la parrilla", 30000, "Salmón"),
         MainCourse("Pasta Alfredo", 25000, "Pollo")
     ]
-    #pedido de ejemplo
+
     order = Order()
-    order.add_item(menu_items[0], 2)  # Dos sodas
-    order.add_item(menu_items[3])      # Una orden de alitas de pollo
-    order.add_item(menu_items[7])      # Una ensalada César
+    order.add_item(menu_items[0], 2) 
+    order.add_item(menu_items[3])      
+    order.add_item(menu_items[7])      
 
     total_bill = order.calculate_total()
     print("Total de la factura:", total_bill)
+
 ```
