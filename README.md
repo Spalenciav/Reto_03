@@ -120,7 +120,7 @@ rectangle = Rectangle(top_line, right_line, bottom_line, left_line)
 ```
 
 
-# Punto "
+# Punto 2
 **Problema:** 
 Restaurant scenario: You want to design a program to calculate the bill for a customer's order in a restaurant.
 # Solución:
